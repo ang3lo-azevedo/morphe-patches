@@ -1,3 +1,9 @@
+## [0.1.2](https://github.com/ang3lo-azevedo/morphe-patches/compare/v0.1.1...v0.1.2) (2026-08-08)
+
+### Bug Fixes
+
+* patch EntitlementInfos.getActive() to return all entitlements ([9aafb6c](https://github.com/ang3lo-azevedo/morphe-patches/commit/9aafb6c78094752bf0f0447ed13aab864248a1c8))
+
 ## [0.1.1](https://github.com/ang3lo-azevedo/morphe-patches/compare/v0.1.0...v0.1.1) (2026-08-08)
 
 ### Bug Fixes
