@@ -58,18 +58,16 @@ val findTheFireUnlockFirePassPatch = bytecodePatch(
     execute {
         EntitlementInfoIsActiveFingerprint.method.returnEarly(true)
 
-        EntitlementInfosGetActiveFingerprint.method.ensureRegisters(4)
-        EntitlementInfosGetActiveFingerprint.method.clearBody()
-        EntitlementInfosGetActiveFingerprint.method.addInstructions(
+        EntitlementInfosMapperKtMapFingerprint.method.ensureRegisters(9)
+        EntitlementInfosMapperKtMapFingerprint.method.clearBody()
+        EntitlementInfosMapperKtMapFingerprint.method.addInstructions(
             0,
             """
-            new-instance v0, Ljava/util/LinkedHashMap;
-            invoke-direct {v0}, Ljava/util/LinkedHashMap;-><init>()V
+            const-string v0, "firepass"
             new-instance v1, Ljava/util/HashMap;
             invoke-direct {v1}, Ljava/util/HashMap;-><init>()V
             const-string v2, "identifier"
-            const-string v3, "firepass"
-            invoke-virtual {v1, v2, v3}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+            invoke-virtual {v1, v2, v0}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
             const-string v2, "isActive"
             sget-object v3, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
             invoke-virtual {v1, v2, v3}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
@@ -77,11 +75,35 @@ val findTheFireUnlockFirePassPatch = bytecodePatch(
             sget-object v3, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
             invoke-virtual {v1, v2, v3}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
             const-string v2, "productIdentifier"
-            const-string v3, "firepass"
+            invoke-virtual {v1, v2, v0}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+            const-string v2, "periodType"
+            const-string v3, "NORMAL"
             invoke-virtual {v1, v2, v3}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
-            const-string v2, "firepass"
-            invoke-virtual {v0, v2, v1}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
-            return-object v0
+            const-string v2, "store"
+            const-string v3, "PLAY_STORE"
+            invoke-virtual {v1, v2, v3}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+            const-string v2, "isSandbox"
+            sget-object v3, Ljava/lang/Boolean;->FALSE:Ljava/lang/Boolean;
+            invoke-virtual {v1, v2, v3}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+            const-string v2, "ownershipType"
+            const-string v3, "PURCHASED"
+            invoke-virtual {v1, v2, v3}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+            const-string v2, "verification"
+            const-string v3, "NOT_REQUESTED"
+            invoke-virtual {v1, v2, v3}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+            new-instance v4, Ljava/util/LinkedHashMap;
+            invoke-direct {v4}, Ljava/util/LinkedHashMap;-><init>()V
+            invoke-virtual {v4, v0, v1}, Ljava/util/LinkedHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+            const-string v2, "all"
+            const-string v3, "active"
+            new-instance v5, Ljava/util/LinkedHashMap;
+            invoke-direct {v5}, Ljava/util/LinkedHashMap;-><init>()V
+            invoke-virtual {v5, v2, v4}, Ljava/util/LinkedHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+            invoke-virtual {v5, v3, v4}, Ljava/util/LinkedHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+            const-string v3, "verification"
+            const-string v4, "NOT_REQUESTED"
+            invoke-virtual {v5, v3, v4}, Ljava/util/LinkedHashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+            return-object v5
             """.trimIndent(),
         )
     }

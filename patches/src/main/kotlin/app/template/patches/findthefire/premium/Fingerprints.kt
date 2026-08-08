@@ -1,6 +1,7 @@
 package app.template.patches.findthefire.premium
 
 import app.morphe.patcher.Fingerprint
+import app.morphe.patcher.methodCall
 import com.android.tools.smali.dexlib2.AccessFlags
 
 /**
@@ -49,4 +50,36 @@ object EntitlementInfosGetActiveFingerprint : Fingerprint(
     parameters = listOf(),
     definingClass = "Lcom/revenuecat/purchases/EntitlementInfos;",
     name = "getActive",
+)
+
+/**
+ * Targets EntitlementInfosMapperKt.map() — converts EntitlementInfos to a
+ * Map<String, Object> suitable for the React Native bridge.
+ *
+ * This is the SAFE injection point: it returns plain Map<String, Object>,
+ * so we can inject HashMap-based fake entitlements without ClassCastException.
+ *
+ * Smali (classes4.dex):
+ *   .method public static final map(Lcom/revenuecat/purchases/EntitlementInfos;)Ljava/util/Map;
+ *
+ * Returns: { "all": {...}, "active": {...}, "verification": "..." }
+ *
+ * We replace the entire body to return a fake map with an active "firepass" entry.
+ */
+object EntitlementInfosMapperKtMapFingerprint : Fingerprint(
+    returnType = "Ljava/util/Map;",
+    accessFlags = listOf(AccessFlags.PUBLIC, AccessFlags.STATIC, AccessFlags.FINAL),
+    parameters = listOf("Lcom/revenuecat/purchases/EntitlementInfos;"),
+    definingClass = "Lcom/revenuecat/purchases/hybridcommon/mappers/EntitlementInfosMapperKt;",
+    name = "map",
+    filters = listOf(
+        methodCall(
+            definingClass = "Lcom/revenuecat/purchases/EntitlementInfos;",
+            name = "getAll",
+        ),
+        methodCall(
+            definingClass = "Lcom/revenuecat/purchases/EntitlementInfos;",
+            name = "getActive",
+        ),
+    ),
 )
