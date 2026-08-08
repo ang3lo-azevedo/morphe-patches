@@ -9,7 +9,7 @@
 > **Note**
 >
 > My personal collection of patches for [Morphe](https://github.com/MorpheApp/morphe-patches), maintained in my spare time.  
-> Patch requests are welcome — open an issue and I'll take a look.
+> Patch requests are welcome - open an issue and I'll take a look.
 
 ---
 
@@ -47,11 +47,11 @@ Or manually add this repository URL as a patch source in Morphe:
 
 | Patch | Description | Options |
 |-------|-------------|---------|
-| [Unlock FirePass Premium](#unlock-firepass-premium) | Unlocks FirePass premium features: spot filtering by skill level, advanced map features, and session log tools. | — |
+| [Unlock FirePass Premium](#unlock-firepass-premium) | Unlocks FirePass premium features: spot filtering by skill level, advanced map features, and session log tools. | - |
 
 ## 📬 Issues / requests
 
-Found something broken? Have a new patch idea? Open an issue — I might get to it.
+Found something broken? Have a new patch idea? Open an issue - I might get to it.
 
 Useful links:
 - [Bug report](https://github.com/ang3lo-azevedo/morphe-patches/issues/new?template=bug_report.yml)
