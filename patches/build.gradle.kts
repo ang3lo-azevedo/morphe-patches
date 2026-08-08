@@ -18,60 +18,10 @@ kotlin {
     }
 }
 
-val generatedSecretsDir = layout.buildDirectory.dir("generated/secrets/kotlin")
-
-sourceSets {
-    main {
-        kotlin.srcDir(generatedSecretsDir)
-    }
-}
-
-val generateSecrets by tasks.registering {
-    inputs.property("PLACEHOLDER", "")
-    outputs.dir(generatedSecretsDir)
-
-    doLast {
-        val outputDir = generatedSecretsDir.get().asFile.resolve("app/template/patches/shared")
-        outputDir.mkdirs()
-        outputDir.resolve("BuildSecrets.kt").writeText(
-            """
-            package app.template.patches.shared
-
-            internal object BuildSecrets {
-            }
-            """.trimIndent(),
-        )
-    }
-}
-
-tasks.named("compileKotlin") {
-    dependsOn(generateSecrets)
-}
-
-tasks.named("sourcesJar") {
-    dependsOn(generateSecrets)
-}
+val patchListGeneratorClasspath: Configuration by configurations.creating
 
 dependencies {
     implementation(libs.morphe.patches.library)
     compileOnly(libs.gson)
-}
-
-val patchListGeneratorClasspath: Configuration by configurations.creating
-
-dependencies {
     patchListGeneratorClasspath(libs.gson)
-}
-
-tasks {
-    register<JavaExec>("generatePatchesList") {
-        description = "Build patch with patch list"
-        dependsOn(build)
-        classpath = sourceSets["main"].runtimeClasspath + patchListGeneratorClasspath
-        mainClass.set("util.PatchListGeneratorKt")
-    }
-
-    publish {
-        dependsOn("generatePatchesList")
-    }
 }
