@@ -1,3 +1,9 @@
+## [0.1.4](https://github.com/ang3lo-azevedo/morphe-patches/compare/v0.1.3...v0.1.4) (2026-08-08)
+
+### Bug Fixes
+
+* point patches-bundle.json to v0.1.3 release ([a3e150b](https://github.com/ang3lo-azevedo/morphe-patches/commit/a3e150b0b9a141b396625610ee9b77f631ec2267))
+
 ## [0.1.2](https://github.com/ang3lo-azevedo/morphe-patches/compare/v0.1.1...v0.1.2) (2026-08-08)
 
 ### Bug Fixes
