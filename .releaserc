@@ -42,12 +42,6 @@
     ],
     "gradle-semantic-release-plugin",
     [
-      "@semantic-release/exec",
-      {
-        "prepareCmd": ""
-      }
-    ],
-    [
       "@semantic-release/git",
       {
         "assets": [
