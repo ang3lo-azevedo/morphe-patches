@@ -1,0 +1,13 @@
+[
+  {
+    "name": "example-patch",
+    "description": "An example patch demonstrating the patch structure.",
+    "compatiblePackages": [
+      {
+        "name": "com.example.app",
+        "versions": ["1.0.0"]
+      }
+    ],
+    "options": []
+  }
+]
