@@ -1,3 +1,9 @@
+## [0.1.7](https://github.com/ang3lo-azevedo/morphe-patches/compare/v0.1.6...v0.1.7) (2026-08-08)
+
+### Bug Fixes
+
+* simplify EntitlementInfosMapperKtMap fingerprint, remove methodCall filters ([0e90c1e](https://github.com/ang3lo-azevedo/morphe-patches/commit/0e90c1e7765226c549e317b231f76d6c5c1cb5dd))
+
 ## [0.1.4](https://github.com/ang3lo-azevedo/morphe-patches/compare/v0.1.3...v0.1.4) (2026-08-08)
 
 ### Bug Fixes
