@@ -53,5 +53,25 @@ tasks.named("sourcesJar") {
 }
 
 dependencies {
+    implementation(libs.morphe.patches.library)
     compileOnly(libs.gson)
+}
+
+val patchListGeneratorClasspath: Configuration by configurations.creating
+
+dependencies {
+    patchListGeneratorClasspath(libs.gson)
+}
+
+tasks {
+    register<JavaExec>("generatePatchesList") {
+        description = "Build patch with patch list"
+        dependsOn(build)
+        classpath = sourceSets["main"].runtimeClasspath + patchListGeneratorClasspath
+        mainClass.set("util.PatchListGeneratorKt")
+    }
+
+    publish {
+        dependsOn("generatePatchesList")
+    }
 }
