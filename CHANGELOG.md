@@ -1,3 +1,13 @@
+## [0.1.1](https://github.com/ang3lo-azevedo/morphe-patches/compare/v0.1.0...v0.1.1) (2026-08-08)
+
+### Bug Fixes
+
+* remove @semantic-release/exec plugin (not needed) ([efde399](https://github.com/ang3lo-azevedo/morphe-patches/commit/efde39998968c855e7a2936dbc7e3f86df00dc5c))
+* remove generatePatchesList task (requires morphe-patches-library) ([a3c3c1a](https://github.com/ang3lo-azevedo/morphe-patches/commit/a3c3c1a04f969305047ac01d4b98464b25048a4d))
+* remove sha256sum from prepare phase (build runs later in publish) ([246e265](https://github.com/ang3lo-azevedo/morphe-patches/commit/246e265ee8becb3fc8af45c1e12cf66c762c7692))
+* simplify release prepareCmd, patches-list.json is array not object ([63b33b3](https://github.com/ang3lo-azevedo/morphe-patches/commit/63b33b38be0bdd1a1e94c0e671880cb5cc2d8f64))
+* update patches-list.json with actual FirePass patch metadata ([15ec709](https://github.com/ang3lo-azevedo/morphe-patches/commit/15ec709e84cdae08ef416b195d44d88eb1a9b973))
+
 # Changelog
 
 ## [0.1.0](https://github.com/ang3lo-azevedo/morphe-patches/releases/tag/v0.1.0) (2026-08-08)
