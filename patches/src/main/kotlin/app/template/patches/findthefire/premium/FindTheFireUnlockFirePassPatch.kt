@@ -71,9 +71,6 @@ val findTheFireUnlockFirePassPatch = bytecodePatch(
     compatibleWith(FIND_THE_FIRE_COMPATIBILITY)
 
     execute {
-        EntitlementInfoIsActiveFingerprint.let { fingerprint ->
-            fingerprint.resolve(context)
-            fingerprint.method.returnEarly(true)
-        }
+        EntitlementInfoIsActiveFingerprint.method.returnEarly(true)
     }
 }
