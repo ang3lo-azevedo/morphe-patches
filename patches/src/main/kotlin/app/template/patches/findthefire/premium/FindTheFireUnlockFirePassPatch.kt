@@ -4,6 +4,7 @@ import app.morphe.patcher.patch.bytecodePatch
 import app.morphe.patcher.patch.Compatibility
 import app.morphe.patcher.patch.AppTarget
 import app.morphe.patcher.patch.ApkFileType
+import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
 import app.template.patches.shared.returnEarly
 
 val FIND_THE_FIRE_COMPATIBILITY = Compatibility(
@@ -22,45 +23,27 @@ val FIND_THE_FIRE_COMPATIBILITY = Compatibility(
  * Architecture: Expo / React Native app with RevenueCat Purchases SDK
  * for subscription management. The premium tier is called "FirePass".
  *
- * RevenueCat entitlement: "firepass" (or similar identifier configured
- * in the RevenueCat dashboard). The JS side checks:
+ * RevenueCat data flow:
+ *   CustomerInfo → EntitlementInfos { all, active } → JS via RN bridge
  *
- *   Purchases.getCustomerInfo().then(info => {
- *     const isFirePass = info.entitlements.active.firepass !== undefined;
- *   });
+ * Patch strategy — two key patches:
  *
- * Patch strategy:
+ *   1. EntitlementInfo.isActive() → always return true
+ *      Makes every entitlement entry report as active.
  *
- *   Single point of truth: EntitlementInfo.isActive()
+ *   2. EntitlementInfos.getActive() → return getAll() instead
+ *      The getActive() method reads the `active` field (built in constructor
+ *      by filtering all entries where isActive() is true). But the constructor
+ *      runs BEFORE our isActive() patch takes effect, so the active map
+ *      is already built with the original values. By patching getActive()
+ *      to return `all` instead of `active`, we include all entitlement entries.
  *
- *   RevenueCat's EntitlementInfo class has a boolean `isActive` field that
- *   indicates whether the entitlement is currently valid (subscription active,
- *   not expired, not revoked). The getter reads this field directly.
+ *   Combined effect: any entitlement in CustomerInfo (including "firepass"
+ *   if configured in RevenueCat dashboard) will appear active in JS.
  *
- *   By forcing isActive() to always return true, we make ALL entitlements
- *   appear active. The EntitlementInfos constructor uses this method to
- *   build its `active` map, so the FirePass entitlement will appear in
- *   the active entitlements list.
- *
- *   This cascades through the entire stack:
- *
- *     EntitlementInfo.isActive() → true (patched here)
- *       ↓
- *     EntitlementInfos constructor → includes in `active` map
- *       ↓
- *     CustomerInfo.entitlements → EntitlementInfos with active FirePass
- *       ↓
- *     CustomerInfoMapperKt.map() → JS-compatible WritableMap
- *       ↓
- *     RNPurchasesModule → sends to JavaScript via React Native bridge
- *       ↓
- *     JS: info.entitlements.active.firepass → EntitlementInfo { isActive: true }
- *
- *   Note: This requires that the "firepass" entitlement exists in the
- *   RevenueCat dashboard and is included in the CustomerInfo response.
- *   If the entitlement is completely absent for free users, an additional
- *   patch to CustomerInfoMapperKt.map() would be needed to inject the
- *   entitlement entry.
+ *   Note: If RevenueCat returns an EMPTY entitlement map for free users
+ *   (no "firepass" entry at all), additional injection is needed at the
+ *   CustomerInfoMapperKt.map() level.
  */
 @Suppress("unused")
 val findTheFireUnlockFirePassPatch = bytecodePatch(
@@ -71,6 +54,19 @@ val findTheFireUnlockFirePassPatch = bytecodePatch(
     compatibleWith(FIND_THE_FIRE_COMPATIBILITY)
 
     execute {
+        // Layer 1: Force isActive() to always return true on every entitlement
         EntitlementInfoIsActiveFingerprint.method.returnEarly(true)
+
+        // Layer 2: getActive() → return getAll() instead
+        // The EntitlementInfos constructor runs before our patches, so the
+        // `active` field was already filtered with the original isActive values.
+        // By returning `all` instead of `active`, we pick up all entitlements.
+        EntitlementInfosGetActiveFingerprint.method.addInstructions(
+            0,
+            """
+            iget-object v0, p0, Lcom/revenuecat/purchases/EntitlementInfos;->all:Ljava/util/Map;
+            return-object v0
+            """.trimIndent(),
+        )
     }
 }
