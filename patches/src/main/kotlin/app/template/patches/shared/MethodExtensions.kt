@@ -53,3 +53,16 @@ fun MutableMethod.returnEarly(value: Int) = addInstructions(
     0,
     "const/16 v0, $value\nreturn v0",
 )
+
+fun MutableMethod.ensureRegisters(needed: Int) {
+    val impl = implementation ?: return
+    if (impl.registerCount >= needed) return
+    val field = MutableMethodImplementation::class.java.declaredFields
+        .firstOrNull { it.type == Int::class.javaPrimitiveType }
+        ?.apply { isAccessible = true }
+        ?: throw app.morphe.patcher.patch.PatchException(
+            "MutableMethodImplementation has no int field (registerCount). " +
+                "dexlib2 internal layout changed?",
+        )
+    field.setInt(impl, needed)
+}

@@ -5,6 +5,8 @@ import app.morphe.patcher.patch.Compatibility
 import app.morphe.patcher.patch.AppTarget
 import app.morphe.patcher.patch.ApkFileType
 import app.morphe.patcher.extensions.InstructionExtensions.addInstructions
+import app.template.patches.shared.clearBody
+import app.template.patches.shared.ensureRegisters
 import app.template.patches.shared.returnEarly
 
 val FIND_THE_FIRE_COMPATIBILITY = Compatibility(
@@ -54,17 +56,31 @@ val findTheFireUnlockFirePassPatch = bytecodePatch(
     compatibleWith(FIND_THE_FIRE_COMPATIBILITY)
 
     execute {
-        // Layer 1: Force isActive() to always return true on every entitlement
         EntitlementInfoIsActiveFingerprint.method.returnEarly(true)
 
-        // Layer 2: getActive() → return getAll() instead
-        // The EntitlementInfos constructor runs before our patches, so the
-        // `active` field was already filtered with the original isActive values.
-        // By returning `all` instead of `active`, we pick up all entitlements.
+        EntitlementInfosGetActiveFingerprint.method.ensureRegisters(4)
+        EntitlementInfosGetActiveFingerprint.method.clearBody()
         EntitlementInfosGetActiveFingerprint.method.addInstructions(
             0,
             """
-            iget-object v0, p0, Lcom/revenuecat/purchases/EntitlementInfos;->all:Ljava/util/Map;
+            new-instance v0, Ljava/util/LinkedHashMap;
+            invoke-direct {v0}, Ljava/util/LinkedHashMap;-><init>()V
+            new-instance v1, Ljava/util/HashMap;
+            invoke-direct {v1}, Ljava/util/HashMap;-><init>()V
+            const-string v2, "identifier"
+            const-string v3, "firepass"
+            invoke-virtual {v1, v2, v3}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+            const-string v2, "isActive"
+            sget-object v3, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
+            invoke-virtual {v1, v2, v3}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+            const-string v2, "willRenew"
+            sget-object v3, Ljava/lang/Boolean;->TRUE:Ljava/lang/Boolean;
+            invoke-virtual {v1, v2, v3}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+            const-string v2, "productIdentifier"
+            const-string v3, "firepass"
+            invoke-virtual {v1, v2, v3}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
+            const-string v2, "firepass"
+            invoke-virtual {v0, v2, v1}, Ljava/util/HashMap;->put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;
             return-object v0
             """.trimIndent(),
         )
