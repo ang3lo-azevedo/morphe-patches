@@ -72,14 +72,4 @@ object EntitlementInfosMapperKtMapFingerprint : Fingerprint(
     parameters = listOf("Lcom/revenuecat/purchases/EntitlementInfos;"),
     definingClass = "Lcom/revenuecat/purchases/hybridcommon/mappers/EntitlementInfosMapperKt;",
     name = "map",
-    filters = listOf(
-        methodCall(
-            definingClass = "Lcom/revenuecat/purchases/EntitlementInfos;",
-            name = "getAll",
-        ),
-        methodCall(
-            definingClass = "Lcom/revenuecat/purchases/EntitlementInfos;",
-            name = "getActive",
-        ),
-    ),
 )
