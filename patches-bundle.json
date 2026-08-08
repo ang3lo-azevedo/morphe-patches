@@ -1,4 +1,7 @@
 {
-  "version": "0.1.0",
-  "patches": []
+  "created_at": "2026-08-08T00:00:00",
+  "description": "Ang3lo's personal collection of Morphe patches",
+  "download_url": "https://github.com/ang3lo-azevedo/morphe-patches/releases/download/v0.1.0/patches-0.1.0.mpp",
+  "signature_download_url": "",
+  "version": "0.1.0"
 }

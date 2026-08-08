@@ -13,11 +13,12 @@ build/
 Thumbs.db
 
 # Build outputs
-out/
 *.apk
+*.xapk
 *.aab
+*.mpp
 
-# Dependency directories
+# Dependencies
 node_modules/
 
 # Local configuration
